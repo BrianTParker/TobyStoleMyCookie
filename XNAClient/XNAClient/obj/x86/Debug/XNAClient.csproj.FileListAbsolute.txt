@@ -1,0 +1,83 @@
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\XNAClient.exe
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\XNAClient.pdb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.dll
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\XNAClient.exe
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\XNAClient.pdb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\cookie.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_left1.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_left2.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_right1.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_right2.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_stand.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\trampoline.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\trampoline_pressed.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\Truett.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\Truett_Jump.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\park.xnb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.Xna.dll
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.pdb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.xml
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.Xna.pdb
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\DebugViewXNA.dll
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\FarseerPhysicsXNA.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\cookie.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_left1.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_left2.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_right1.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_right2.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\toby_stand.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\trampoline.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\trampoline_pressed.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\Truett.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\Truett_Jump.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\park.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\XNAClient.exe
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\XNAClient.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\DebugViewXNA.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\FarseerPhysicsXNA.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.Xna.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.xml
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.Xna.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\XNAClient.exe
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\obj\x86\Debug\XNAClient.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\font.xnb
+C:\Users\Br\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClient\bin\x86\Debug\Content\font.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\obj\x86\Debug\XNAClient.exe
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\obj\x86\Debug\XNAClient.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\cookie.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\toby_left1.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\toby_left2.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\toby_right1.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\toby_right2.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\toby_stand.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\trampoline.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\trampoline_pressed.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\Truett.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\Truett_Jump.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\park.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\font.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\XNAClient.exe
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\XNAClient.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\DebugViewXNA.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\FarseerPhysicsXNA.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.Xna.dll
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.xml
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Lidgren.Network.Xna.pdb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\Text.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\host.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\join.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\multi_player.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\single_player.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\start_screen.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\internet.xnb
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClient\bin\x86\Debug\Content\lan.xnb

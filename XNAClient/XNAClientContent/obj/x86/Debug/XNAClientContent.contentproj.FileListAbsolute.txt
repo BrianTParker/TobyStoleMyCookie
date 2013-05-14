@@ -1,0 +1,3 @@
+c:\users\br\documents\visual studio 2010\Projects\XNAClient\XNAClient\XNAClientContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient\XNAClient\XNAClientContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\brian.parker\Documents\Visual Studio 2010\Projects\XNAClient with Screen manager\XNAClient\XNAClientContent\obj\x86\Debug\ResolveAssemblyReference.cache
