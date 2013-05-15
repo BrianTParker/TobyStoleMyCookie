@@ -106,6 +106,7 @@ namespace XNAClient
             client = new NetClient(config);
             client.Start();
             
+            
             state = GameState.mainMenu;
             
         }
@@ -205,17 +206,15 @@ namespace XNAClient
                         Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
                         if (recA.Contains(recB))
                         {
-                            if (host == 0)
-                            {
+                            
 
-                                server = new Server();
-                                sfd = new SomeFunctionDelegate(server.launchServer);
-                                sfd.BeginInvoke(null, null);
-                                host++;
-                                LAN = true;
-                                client.DiscoverLocalPeers(14242);
-                            }
-
+                            server = new Server();
+                            sfd = new SomeFunctionDelegate(server.launchServer);
+                            sfd.BeginInvoke(null, null);
+                            //host++;
+                            LAN = true;
+                            client.DiscoverLocalPeers(14242);
+                            
                             state = GameState.playing;
 
 
@@ -240,16 +239,15 @@ namespace XNAClient
                         if (recA.Contains(recB))
                         {
 
-                            if (host == 0)
-                            {
+                            
                                 
-                                server = new Server();
-                                sfd = new SomeFunctionDelegate(server.launchServer);
-                                sfd.BeginInvoke(null, null);
-                                host++;
-                                LAN = true;
-                                client.DiscoverLocalPeers(14242);
-                            }
+                            server = new Server();
+                            sfd = new SomeFunctionDelegate(server.launchServer);
+                            sfd.BeginInvoke(null, null);
+                            host++;
+                            LAN = true;
+                            client.DiscoverLocalPeers(14242);
+                            
 
                             
 
@@ -458,7 +456,11 @@ namespace XNAClient
                     {
                         case NetIncomingMessageType.DiscoveryResponse:
                             // just connect to first server discovered
-                            client.Connect(msg.SenderEndPoint);
+                            if (LAN)
+                            {
+                                client.Connect(msg.SenderEndPoint);
+                            }
+                            
                             break;
                         case NetIncomingMessageType.Data:
 
