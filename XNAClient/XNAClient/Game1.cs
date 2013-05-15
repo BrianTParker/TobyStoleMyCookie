@@ -227,7 +227,7 @@ namespace XNAClient
 
                             if (host == 0)
                             {
-                                Console.WriteLine("Should be hosting");
+                                
                                 server = new Server();
                                 sfd = new SomeFunctionDelegate(server.launchServer);
                                 sfd.BeginInvoke(null, null);
@@ -586,6 +586,12 @@ namespace XNAClient
             switch (state)
             {
                 case GameState.mainMenu:
+                    //reset all the other buttons to be invisible
+                    hostGame.makeInvisible();
+                    joinGame.makeInvisible();
+                    joinIneternet.makeInvisible();
+                    joinLan.makeInvisible();
+
                     singlePlayerButton.makeVisible();
                     multiplayerButton.makeVisible();
                     spriteBatch.Draw(singlePlayerButton.getImage(), singlePlayerButton.getPos(), Color.White);
@@ -610,8 +616,12 @@ namespace XNAClient
                     
                     break;
                 case GameState.enterIp:
+                    joinIneternet.makeInvisible();
+                    joinLan.makeInvisible();
+
                     if (textbox.getShowing())
                     {
+                        textbox.Update(gameTime);
                         textbox.PreDraw();
                         GraphicsDevice.Clear(Color.Black);
                         textbox.Draw();
@@ -619,6 +629,7 @@ namespace XNAClient
                     else
                     {
                         remoteIp = textbox.getText();
+                        client.DiscoverKnownPeer(remoteIp, 14242);
                         state = GameState.playing;
 
                     }
