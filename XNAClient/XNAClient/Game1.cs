@@ -88,6 +88,9 @@ namespace XNAClient
         MouseState mouseState;
         Vector2 mousePos;
 
+        bool LAN = false;
+        
+
 
         public Game1()
         {
@@ -202,6 +205,17 @@ namespace XNAClient
                         Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
                         if (recA.Contains(recB))
                         {
+                            if (host == 0)
+                            {
+
+                                server = new Server();
+                                sfd = new SomeFunctionDelegate(server.launchServer);
+                                sfd.BeginInvoke(null, null);
+                                host++;
+                                LAN = true;
+                                client.DiscoverLocalPeers(14242);
+                            }
+
                             state = GameState.playing;
 
 
@@ -214,6 +228,7 @@ namespace XNAClient
                         if (recA.Contains(recB))
                         {
                             state = GameState.multiplayerMenu;
+
 
 
                         }
@@ -232,6 +247,7 @@ namespace XNAClient
                                 sfd = new SomeFunctionDelegate(server.launchServer);
                                 sfd.BeginInvoke(null, null);
                                 host++;
+                                LAN = true;
                                 client.DiscoverLocalPeers(14242);
                             }
 
@@ -266,6 +282,7 @@ namespace XNAClient
                         {
                             client.DiscoverLocalPeers(14242);
                             state = GameState.playing;
+                            LAN = true;
                         }
                     }
                 }
@@ -629,7 +646,7 @@ namespace XNAClient
                     else
                     {
                         remoteIp = textbox.getText();
-                        client.DiscoverKnownPeer(remoteIp, 14242);
+                        client.Connect(remoteIp, 14242);
                         state = GameState.playing;
 
                     }
