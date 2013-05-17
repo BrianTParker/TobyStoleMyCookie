@@ -351,7 +351,7 @@ namespace XNAClient
                 foreach (var p in allPlayers)
                 {
                     int cookieId = 0;
-                    BackgroundWorker bg = new BackgroundWorker();
+                    
 
                     for (int x = 0; x < cookies.Count; x++)
                     {
@@ -456,6 +456,7 @@ namespace XNAClient
                     {
                         case NetIncomingMessageType.DiscoveryResponse:
                             // just connect to first server discovered
+                            Console.WriteLine("Received a request response");
                             if (LAN)
                             {
                                 client.Connect(msg.SenderEndPoint);
