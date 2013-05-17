@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace XNAClient
 {
@@ -25,7 +26,8 @@ namespace XNAClient
 
         //Other stuff server needs to keep track of
         Random r = new Random();
-        int level;
+        int currentLevel;
+        int previousLevel;
         List<Object> cookies;
         int lastCookieCount;
         
@@ -36,8 +38,8 @@ namespace XNAClient
         public Server(){
 
             numPlayers = 0;
-            level = 1;
-
+            currentLevel = 1;
+            previousLevel = 0;
             //server stuff
             config = new NetPeerConfiguration("xnaapp");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
@@ -50,6 +52,8 @@ namespace XNAClient
             cookies = new List<Object>();
             playerList = new List<Player>();
             lastCookieCount = 0;
+
+            
             
 
             
@@ -58,7 +62,7 @@ namespace XNAClient
         public Server(int inPort){
 
             numPlayers = 0;
-            level = 1;
+            currentLevel = 1;
 
             //server stuff
             config = new NetPeerConfiguration("xnaapp");
@@ -69,8 +73,7 @@ namespace XNAClient
             server.Start();
 
             nextSendUpdates = NetTime.Now;
-
-
+            
         }
 
         public void launchServer()
@@ -82,6 +85,38 @@ namespace XNAClient
             // run until escape is pressed
             while (true)
             {
+
+                //Console.WriteLine(cookies.Count);
+                if (currentLevel != previousLevel)
+                {
+                    previousLevel = currentLevel;
+                    populateCookies();
+
+                    foreach (NetConnection player in server.Connections)
+                    {
+                        foreach (var c in cookies)
+                        {
+
+                            NetOutgoingMessage om = server.CreateMessage();
+                            om.Write(c.getPos().X);
+                            om.Write(c.getPos().Y);
+                            om.Write(c.getId());
+                            server.SendMessage(om, player, NetDeliveryMethod.UnreliableSequenced, 1);
+                        }
+                    }
+                }
+
+                if (cookies.Count == 0 && previousLevel != 0)
+                {
+                    currentLevel++;
+                    foreach (NetConnection player in server.Connections)
+                    {
+                        NetOutgoingMessage om = server.CreateMessage();
+                        om.Write(currentLevel);
+                        server.SendMessage(om, player, NetDeliveryMethod.UnreliableSequenced, 4);
+                    }
+                }
+
                 NetIncomingMessage msg;
                 while ((msg = server.ReadMessage()) != null)
                 {
@@ -119,13 +154,22 @@ namespace XNAClient
                                 if (numPlayers == 1)
                                 {
                                     msg.SenderConnection.Tag = new float[] { 150, 100 };
-                                    populateCookies();
+                                    //populateCookies();
+                                    foreach (var c in cookies)
+                                    {
+                                        NetOutgoingMessage om = server.CreateMessage();
+
+                                        om.Write(c.getPos().X);
+                                        om.Write(c.getPos().Y);
+                                        om.Write(c.getId());
+                                        server.SendMessage(om, msg.SenderConnection, NetDeliveryMethod.UnreliableSequenced, 1);
+                                    }
                                     
                                 }
                                 else if (numPlayers == 3)
                                 {
                                     msg.SenderConnection.Tag = new float[] { 950, 100 };
-                                    
+                                    Console.WriteLine("Should be sending " + cookies.Count + " cookies.");
                                     foreach (var c in cookies)
                                     {
                                         NetOutgoingMessage om = server.CreateMessage();
@@ -248,20 +292,7 @@ namespace XNAClient
                             }
 
                             //send information about the cookies
-                            if (cookies.Count != lastCookieCount)
-                            {
-                                foreach (var c in cookies)
-                                {
-                                    
-                                    NetOutgoingMessage om = server.CreateMessage();
-                                    om.Write(c.getPos().X);
-                                    om.Write(c.getPos().Y);
-                                    om.Write(c.getId());
-                                    server.SendMessage(om, player, NetDeliveryMethod.UnreliableSequenced, 1);
-                                }
-                                lastCookieCount = cookies.Count;
-                                //cookiesSent = true;
-                            }
+                            
                             
                         }
 
@@ -280,78 +311,121 @@ namespace XNAClient
 
         public void populateCookies()
         {
-            int id = 1;
+
             Random r = new Random();
+            int id = 1;
+            bool validPlacement = false;
+            bool intersect = false;
+            int tries = 0;
+            int numCookies = 0;
 
-            if (level == 1)
+            if (currentLevel == 1)
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    int x = r.Next(10, 1100);
-                    int y = r.Next(200, 400);
-                    
-
-                    cookies.Add(new Object((float)x, (float)y, id));
-                    id += 1;
-                }
-                
-                
+                numCookies = 10;
+            }
+            else if (currentLevel == 2)
+            {
+                numCookies = 15;
+            }
+            else if (currentLevel == 3)
+            {
+                numCookies = 20;
+            }
+            else if (currentLevel == 4)
+            {
+                numCookies = 25;
             }
 
+            for (int i = 0; i < numCookies; i++)
+            {
+                int x = r.Next(10, 1100);
+                int y = r.Next(200, 400);
+                if (cookies.Count > 0)
+                {
+                    while (validPlacement == false && tries < 10)
+                    {
+                        x = r.Next(10, 1100);
+                        y = r.Next(200, 400);
+                        foreach (var c in cookies)
+                        {
+                            Rectangle recA = new Rectangle((int)c.getPos().X, (int)c.getPos().Y, 60, 60);
+                            Rectangle recB = new Rectangle(x, y, 60, 60);
 
-            //Random r = new Random();
+                            if (recA.Intersects(recB))
+                            {
+                                intersect = true;
+                                tries++;
+
+                            }
+
+                        }
+                        if (intersect)
+                        {
+                            validPlacement = false;
+                            intersect = false;
+
+                        }
+                        else
+                        {
+                            validPlacement = true;
+                        }
+                        
+                    }
+
+                    cookies.Add(new Object((float)x, (float)y, id));
+                    validPlacement = false;
+                    tries = 0;
+
+                }
+                else
+                {
+                    cookies.Add(new Object((float)x, (float)y, id));
+                }
+
+
+
+
+
+                id += 1;
+            }
+            
+            
+            
+            
+            
+            
             //int id = 1;
-            //bool validPlacement = false;
-            //bool intersect = false;
-            //for (int i = 0; i < 20; i++)
+            //Random r = new Random();
+
+            //if (currentLevel == 1)
             //{
-            //    int x = r.Next(10, 1100);
-            //    int y = r.Next(200, 400);
-            //    if (cookies.Count > 0)
+            //    for (int i = 0; i < 10; i++)
             //    {
-            //        while (validPlacement == false)
-            //        {
-            //            x = r.Next(10, 1100);
-            //            y = r.Next(200, 400);
-            //            foreach (var c in cookies)
-            //            {
-            //                Rectangle recA = new Rectangle((int)c.getPos().X, (int)c.getPos().Y, 60, 60);
-            //                Rectangle recB = new Rectangle(x, y, 60, 60);
+            //        int x = r.Next(10, 1100);
+            //        int y = r.Next(200, 400);
+                    
 
-            //                if (recA.Intersects(recB))
-            //                {
-            //                    intersect = true;
-
-            //                }
-
-            //            }
-            //            if (intersect)
-            //            {
-            //                validPlacement = false;
-            //                intersect = false;
-
-            //            }
-            //            else
-            //            {
-            //                validPlacement = true;
-            //            }
-            //        }
-
-            //        cookies.Add(new Object(cookieImage, (float)x, (float)y, id));
-            //        validPlacement = false;
-
-            //    }
-            //    else
-            //    {
-            //        cookies.Add(new Object(cookieImage, (float)x, (float)y, id));
+            //        cookies.Add(new Object((float)x, (float)y, id));
+            //        id += 1;
             //    }
 
 
-
-
-
-            //    id += 1;
             //}
+            //else if (currentLevel == 2)
+            //{
+            //    for (int i = 0; i < 20; i++)
+            //    {
+            //        int x = r.Next(10, 1100);
+            //        int y = r.Next(200, 400);
+
+
+            //        cookies.Add(new Object((float)x, (float)y, id));
+            //        id += 1;
+            //    }
+            //}
+
+
+            
         }
         
     }

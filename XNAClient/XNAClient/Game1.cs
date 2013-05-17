@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Storage;
 using Lidgren.Network;
 using System.Collections;
 using System.ComponentModel;
+using System.Threading;
 
 namespace XNAClient
 {
@@ -89,6 +90,9 @@ namespace XNAClient
         Vector2 mousePos;
 
         bool LAN = false;
+
+        int localLevel;
+        int remoteLevel;
         
 
 
@@ -108,6 +112,8 @@ namespace XNAClient
             
             
             state = GameState.mainMenu;
+            int localLevel = 1;
+            int remoteLevel = 1;
             
         }
 
@@ -186,6 +192,8 @@ namespace XNAClient
             
                 float xinput = 0;
                 float yinput = 0;
+
+                
 
                 if (state != GameState.playing)
                 {
@@ -391,10 +399,13 @@ namespace XNAClient
                                 }
 
                             }
+                            
                         }
+                        
 
 
                     }
+                    
 
 
                 }
@@ -577,6 +588,15 @@ namespace XNAClient
                                     }
 
 
+                                }
+                            }
+                            else if (msg.SequenceChannel == 4)
+                            {
+                                remoteLevel = msg.ReadInt32();
+                                if (localLevel != remoteLevel)
+                                {
+                                    localLevel = remoteLevel;
+                                    Thread.Sleep(2000);
                                 }
                             }
 
