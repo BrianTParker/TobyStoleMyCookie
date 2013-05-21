@@ -32,6 +32,7 @@ namespace XNAClient
         int lastCookieCount;
         
         
+        
 
         
 
@@ -147,13 +148,15 @@ namespace XNAClient
                                 // A new player just connected!
                                 //
                                 //Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " connected!");
-                                Player newPlayer = new Player(msg.SenderConnection.RemoteUniqueIdentifier);
-                                playerList.Add(newPlayer);
                                 numPlayers += 1;
+                                Player newPlayer = new Player(msg.SenderConnection.RemoteUniqueIdentifier, numPlayers);
+                                newPlayer.setConnection(msg.SenderConnection);
+                                
                                 // randomize his position and store in connection tag
                                 if (numPlayers == 1)
                                 {
-                                    msg.SenderConnection.Tag = new float[] { 150, 100 };
+                                    newPlayer.updatePosX(100.0f);
+                                    newPlayer.updatePosY(150.0f);
                                     //populateCookies();
                                     foreach (var c in cookies)
                                     {
@@ -166,23 +169,24 @@ namespace XNAClient
                                     }
                                     
                                 }
-                                else if (numPlayers == 3)
-                                {
-                                    msg.SenderConnection.Tag = new float[] { 950, 100 };
-                                    Console.WriteLine("Should be sending " + cookies.Count + " cookies.");
-                                    foreach (var c in cookies)
-                                    {
-                                        NetOutgoingMessage om = server.CreateMessage();
+                                //else if (numPlayers == 3)
+                                //{
+                                //    msg.SenderConnection.Tag = new float[] { 950, 100 };
+                                    
+                                //    foreach (var c in cookies)
+                                //    {
+                                //        NetOutgoingMessage om = server.CreateMessage();
                                         
-                                        om.Write(c.getPos().X);
-                                        om.Write(c.getPos().Y);
-                                        om.Write(c.getId());
-                                        server.SendMessage(om, msg.SenderConnection, NetDeliveryMethod.UnreliableSequenced, 1);
-                                    }
-                                }
+                                //        om.Write(c.getPos().X);
+                                //        om.Write(c.getPos().Y);
+                                //        om.Write(c.getId());
+                                //        server.SendMessage(om, msg.SenderConnection, NetDeliveryMethod.UnreliableSequenced, 1);
+                                //    }
+                                //}
                                 else
                                 {
-                                    msg.SenderConnection.Tag = new float[] { 550, 100 };
+                                    newPlayer.updatePosX(550.0f);
+                                    newPlayer.updatePosY(100.0f);
                                     
                                     foreach (var c in cookies)
                                     {
@@ -198,6 +202,8 @@ namespace XNAClient
                                 //    NetRandom.Instance.Next(10, 100),
                                 //    NetRandom.Instance.Next(10, 100)
                                 //};
+
+                                playerList.Add(newPlayer);
                                 
                             }
 
@@ -208,14 +214,20 @@ namespace XNAClient
                             //
                             if (msg.SequenceChannel == 0)
                             {
+                                long playerId = msg.ReadInt64();
                                 float xinput = msg.ReadFloat();
                                 float yinput = msg.ReadFloat();
 
-                                float[] pos = msg.SenderConnection.Tag as float[];
-
-                                // fancy movement logic goes here; we just append input to position
-                                pos[0] += xinput;
-                                pos[1] += yinput;
+                                foreach (var p in playerList)
+                                {
+                                    if(playerId == p.getId())
+                                    {
+                                        p.updatePosX(xinput);
+                                        p.updatePosY(yinput);
+                                    }
+                                }
+                                
+                                
                             }
                             else if (msg.SequenceChannel == 1)
                             {
@@ -251,6 +263,24 @@ namespace XNAClient
                                     }
                                 }
                             }
+                            else if (msg.SequenceChannel == 6)
+                            {
+                                long playerId = msg.ReadInt64();
+                                int startGame = msg.ReadInt32();
+
+                                if (startGame == 1)
+                                {
+                                    foreach (var p in playerList)
+                                    {
+                                        if (p.getId() != playerId)
+                                        {
+                                            NetOutgoingMessage om = server.CreateMessage();
+                                            om.Write(startGame);
+                                            server.SendMessage(om, p.getCon(), NetDeliveryMethod.UnreliableSequenced, 6);
+                                        }
+                                    }
+                                }
+                            }
 
                             //Console.WriteLine(pos[0]);
                             //Console.WriteLine(pos[1]);
@@ -269,31 +299,56 @@ namespace XNAClient
 
                         
                         // for each player...
-                        foreach (NetConnection player in server.Connections)
+                        //foreach (NetConnection player in server.Connections)
+                        //{
+                        //    // ... send information about every other player (actually including self)
+                        //    foreach (NetConnection otherPlayer in server.Connections)
+                        //    {
+                        //        // send position update about 'otherPlayer' to 'player'
+                        //        NetOutgoingMessage om = server.CreateMessage();
+
+                        //        // write who this position is for
+                        //        om.Write(otherPlayer.RemoteUniqueIdentifier);
+
+                        //        if (otherPlayer.Tag == null)
+                        //            otherPlayer.Tag = new float[2];
+                        //        //Console.WriteLine(otherPlayer.Tag);
+                        //        float[] pos = otherPlayer.Tag as float[];
+                        //        om.Write(pos[0]);
+                        //        om.Write(pos[1]);
+
+                        //        // send message
+                        //        server.SendMessage(om, player, NetDeliveryMethod.UnreliableSequenced, 0);
+                        //    }
+
+                        //    //send information about the cookies
+                            
+                            
+                        //}
+
+                        foreach (var player in playerList)
                         {
                             // ... send information about every other player (actually including self)
-                            foreach (NetConnection otherPlayer in server.Connections)
+                            foreach (var otherPlayer in playerList)
                             {
                                 // send position update about 'otherPlayer' to 'player'
                                 NetOutgoingMessage om = server.CreateMessage();
 
                                 // write who this position is for
-                                om.Write(otherPlayer.RemoteUniqueIdentifier);
+                                om.Write(otherPlayer.getId());
 
-                                if (otherPlayer.Tag == null)
-                                    otherPlayer.Tag = new float[2];
-                                //Console.WriteLine(otherPlayer.Tag);
-                                float[] pos = otherPlayer.Tag as float[];
-                                om.Write(pos[0]);
-                                om.Write(pos[1]);
+                                
+                                om.Write(otherPlayer.getPosX());
+                                om.Write(otherPlayer.getPosY());
+                                om.Write(otherPlayer.getPlayerNum());
 
                                 // send message
-                                server.SendMessage(om, player, NetDeliveryMethod.UnreliableSequenced, 0);
+                                server.SendMessage(om, player.getCon(), NetDeliveryMethod.UnreliableSequenced, 0);
                             }
 
                             //send information about the cookies
-                            
-                            
+
+
                         }
 
                         // schedule next update

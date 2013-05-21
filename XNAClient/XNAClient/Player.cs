@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Lidgren.Network;
 
 namespace XNAClient
 {
@@ -17,6 +18,24 @@ namespace XNAClient
         int moveX, moveY;
         string direction;
         int score;
+        int playerNum;
+        NetConnection con;
+
+        public Player(Texture2D inImage, float inX, float inY, long inId, int numPlayer)
+        {
+            image = inImage;
+            posx = inX;
+            posy = inY;
+            id = inId;
+            position = new Vector2(posx, posy);
+            up = false;
+            moveX = 0;
+            moveY = 0;
+            direction = "right";
+            score = 0;
+            playerNum = numPlayer;
+            
+        }
 
         public Player(Texture2D inImage, float inX, float inY, long inId)
         {
@@ -30,12 +49,15 @@ namespace XNAClient
             moveY = 0;
             direction = "right";
             score = 0;
+            playerNum = 0;
+
         }
 
-        public Player(long inId)
+        public Player(long inId, int inNumPlayers)
         {
             score = 0;
             id = inId;
+            playerNum = inNumPlayers;
         }
 
         public void updateImage(Texture2D newImage)
@@ -168,5 +190,37 @@ namespace XNAClient
         {
             score += amount;
         }
+
+        public int getPlayerNum()
+        {
+            return playerNum;
+        }
+
+        public void setPlayerNum(int inNum)
+        {
+            playerNum = inNum;
+        }
+
+        public float getPosX()
+        {
+            return position.X;
+        }
+
+        public float getPosY()
+        {
+            return position.Y;
+        }
+
+        public void setConnection(NetConnection inCon)
+        {
+            con = inCon;
+        }
+
+        public NetConnection getCon()
+        {
+            return con;
+        }
+
+
     }
 }

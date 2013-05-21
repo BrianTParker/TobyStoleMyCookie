@@ -40,7 +40,7 @@ namespace XNAClient
         private Texture2D join_button;
         private Texture2D internet_button;
         private Texture2D lan_button;
-
+        private Texture2D start_button;
 
         CollisionDetection collision = new CollisionDetection();
 
@@ -52,12 +52,13 @@ namespace XNAClient
             hostOptions,
             joinOptions,
             enterIp,
-            playing
+            playing,
+            lobby
         }
 
         GameState state;
 
-        int host = 0; //this is used because the clicking registers to fast for my cobbled together menu
+        
 
         List<Player> allPlayers = new List<Player>();
         List<Object> cookies = new List<Object>();
@@ -85,20 +86,26 @@ namespace XNAClient
         Button joinIneternet;
         Button hostLan;
         Button hostInternet;
+        Button startGame;
+
+        string gameType;
 
         MouseState mouseState;
         Vector2 mousePos;
 
         bool LAN = false;
-
+        bool host = false;
+        
         int localLevel;
         int remoteLevel;
+
+        int numPlayers;
         
 
 
         public Game1()
         {
-            host = 0;
+            
             
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -114,7 +121,7 @@ namespace XNAClient
             state = GameState.mainMenu;
             int localLevel = 1;
             int remoteLevel = 1;
-            
+            numPlayers = 1;
         }
 
         protected override void Initialize()
@@ -148,6 +155,8 @@ namespace XNAClient
             join_button = Content.Load<Texture2D>("join");
             internet_button = Content.Load<Texture2D>("internet");
             lan_button = Content.Load<Texture2D>("lan");
+            start_button = Content.Load<Texture2D>("startGame");
+
 
 
             textbox = new TextBox(GraphicsDevice, 400, Content.Load<SpriteFont>("Text"))
@@ -165,10 +174,10 @@ namespace XNAClient
                 trampolines[i] = new Object(trampolineImage1, xPosition, 500);
                 xPosition += 400;
             }
-
+            Console.WriteLine(client.UniqueIdentifier);
             player = new Player(truettFall, 150, 100, client.UniqueIdentifier);
             toby = new Player(tobyRight1, 50, 550, -1);
-            allPlayers.Add(player);
+            //allPlayers.Add(player);
 
             singlePlayerButton = new Button(single_player_button, 100, 100);
             multiplayerButton = new Button(multi_player_button, 100, 200);
@@ -178,6 +187,7 @@ namespace XNAClient
             joinIneternet = new Button(internet_button, 100, 200);
             hostLan = new Button(lan_button, 100, 100);
             hostInternet = new Button(internet_button, 100, 200);
+            startGame = new Button(start_button, 300, 100);
 
 
 
@@ -206,93 +216,227 @@ namespace XNAClient
                 
 
 
-                if (mouseState.LeftButton == ButtonState.Pressed)
-                {
-                    if (singlePlayerButton.isVisible())
+                    if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        Rectangle recA = new Rectangle((int)singlePlayerButton.getPos().X, (int)singlePlayerButton.getPos().Y, singlePlayerButton.getImage().Width, singlePlayerButton.getImage().Height);
-                        Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
-                        if (recA.Contains(recB))
+                        if (singlePlayerButton.isVisible())
                         {
+                            Rectangle recA = new Rectangle((int)singlePlayerButton.getPos().X, (int)singlePlayerButton.getPos().Y, singlePlayerButton.getImage().Width, singlePlayerButton.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+                                gameType = "single";
+
+                                server = new Server();
+                                sfd = new SomeFunctionDelegate(server.launchServer);
+                                sfd.BeginInvoke(null, null);
+                                //host++;
+                                LAN = true;
+                                client.DiscoverLocalPeers(14242);
                             
-
-                            server = new Server();
-                            sfd = new SomeFunctionDelegate(server.launchServer);
-                            sfd.BeginInvoke(null, null);
-                            //host++;
-                            LAN = true;
-                            client.DiscoverLocalPeers(14242);
-                            
-                            state = GameState.playing;
+                                state = GameState.playing;
 
 
+                            }
                         }
-                    }
-                    if (multiplayerButton.isVisible())
-                    {
-                        Rectangle recA = new Rectangle((int)multiplayerButton.getPos().X, (int)multiplayerButton.getPos().Y, multiplayerButton.getImage().Width, multiplayerButton.getImage().Height);
-                        Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
-                        if (recA.Contains(recB))
+                        if (multiplayerButton.isVisible())
                         {
-                            state = GameState.multiplayerMenu;
+                            Rectangle recA = new Rectangle((int)multiplayerButton.getPos().X, (int)multiplayerButton.getPos().Y, multiplayerButton.getImage().Width, multiplayerButton.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+
+                                state = GameState.multiplayerMenu;
 
 
 
+                            }
                         }
-                    }
-                    if (hostGame.isVisible())
-                    {
-                        Rectangle recA = new Rectangle((int)hostGame.getPos().X, (int)hostGame.getPos().Y, hostGame.getImage().Width, hostGame.getImage().Height);
-                        Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
-                        if (recA.Contains(recB))
+                        if (hostGame.isVisible())
                         {
+                            Rectangle recA = new Rectangle((int)hostGame.getPos().X, (int)hostGame.getPos().Y, hostGame.getImage().Width, hostGame.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+
+
+                                gameType = "multi";
+                                server = new Server();
+                                sfd = new SomeFunctionDelegate(server.launchServer);
+                                sfd.BeginInvoke(null, null);
+                                host = true;
+                                LAN = true;
+                                client.DiscoverLocalPeers(14242);
+                            
 
                             
+
+                                state = GameState.lobby;
+                            }
+                        }
+                        if (joinGame.isVisible())
+                        {
+                            Rectangle recA = new Rectangle((int)joinGame.getPos().X, (int)joinGame.getPos().Y, joinGame.getImage().Width, joinGame.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+                                state = GameState.joinOptions;
+                            }
+                        }
+                        if (joinIneternet.isVisible())
+                        {
+                            Rectangle recA = new Rectangle((int)joinIneternet.getPos().X, (int)joinIneternet.getPos().Y, joinIneternet.getImage().Width, joinIneternet.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+                                state = GameState.enterIp;
+                                gameType = "multi";
+                            }
+                        }
+                        if (joinLan.isVisible())
+                        {
+                            Rectangle recA = new Rectangle((int)joinLan.getPos().X, (int)joinLan.getPos().Y, joinLan.getImage().Width, joinLan.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+                                client.DiscoverLocalPeers(14242);
+                                state = GameState.lobby;
+                                gameType = "multi";
+                                LAN = true;
+                            }
+                        }
+                        if (startGame.isVisible() && host == true)
+                        {
+                            Rectangle recA = new Rectangle((int)startGame.getPos().X, (int)startGame.getPos().Y, startGame.getImage().Width, startGame.getImage().Height);
+                            Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+                            if (recA.Contains(recB))
+                            {
+                                state = GameState.playing;
+                                NetOutgoingMessage om = client.CreateMessage();
+                                om.Write(player.getId());
+                                om.Write(1);
+                                client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced, 6);
                                 
-                            server = new Server();
-                            sfd = new SomeFunctionDelegate(server.launchServer);
-                            sfd.BeginInvoke(null, null);
-                            host++;
-                            LAN = true;
-                            client.DiscoverLocalPeers(14242);
-                            
+                            }
+                        }
+                    }
 
-                            
+                    if (state == GameState.lobby)
+                    {
+                        //Console.WriteLine(allPlayers.Count);
+                        NetIncomingMessage msg;
+                        while ((msg = client.ReadMessage()) != null)
+                        {
+                            bool playerFound = false;
+                            bool cookieFound = false;
+                            switch (msg.MessageType)
+                            {
+                                case NetIncomingMessageType.DiscoveryResponse:
+                                    // just connect to first server discovered
+                                   // Console.WriteLine("Received a request response");
+                                    if (LAN)
+                                    {
+                                        client.Connect(msg.SenderEndPoint);
+                                    }
 
-                            state = GameState.playing;
+                                    break;
+                                case NetIncomingMessageType.Data:
+
+                                    if (msg.SequenceChannel == 0)
+                                    {
+                                        // server sent a position update
+                                        long who = msg.ReadInt64();
+                                        float x = msg.ReadFloat();
+                                        float y = msg.ReadFloat();
+                                        int playerNum = msg.ReadInt32();
+
+
+                                        Player newPlayer = null;
+                                        foreach (var p in allPlayers)
+                                        {                                 
+
+
+
+                                            if (who == p.getId())
+                                            {
+                                                if (p.getId() == player.getId())
+                                                {
+                                                    if (firstPass == true && x > 0)
+                                                    {
+                                                        player.newPos(new Vector2(x, y));
+
+                                                        firstPass = false;
+                                                    }
+
+
+                                                    if (player.getPlayerNum() != playerNum)
+                                                    {
+
+                                                        player.setPlayerNum(playerNum);
+                                                    }
+
+
+                                                }
+                                                
+
+                                                playerFound = true;
+                                            }
+                                            
+                                            
+
+                                        }
+                                        if (playerFound == false)
+                                        {
+                                            newPlayer = new Player(truettFall, x, y, who, numPlayers);
+                                            allPlayers.Add(newPlayer);
+                                            numPlayers++;
+                                        }
+
+                                        positions[who] = new Vector2(x, y);
+
+                                    }
+                                    else if (msg.SequenceChannel == 1)
+                                    {
+
+                                        //cookies.Clear();
+                                        float x = msg.ReadFloat();
+                                        float y = msg.ReadFloat();
+                                        int id = msg.ReadInt32();
+
+
+                                        foreach (var c in cookies)
+                                        {
+                                            if (c.getId() == id)
+                                            {
+                                                cookieFound = true;
+                                            }
+
+
+                                        }
+                                        if (cookieFound == false)
+                                        {
+                                            Object newCookie = new Object(cookieImage, x, y, id);
+                                            cookies.Add(newCookie);
+                                        }
+                                    }
+                                    else if (msg.SequenceChannel == 6)
+                                    {
+                                        int start = msg.ReadInt32();
+                                        if (start == 1)
+                                        {
+                                            state = GameState.playing;
+                                        }
+                                    }
+
+                                    break;
+                            }
                         }
+
+                        
                     }
-                    if (joinGame.isVisible())
-                    {
-                        Rectangle recA = new Rectangle((int)joinGame.getPos().X, (int)joinGame.getPos().Y, joinGame.getImage().Width, joinGame.getImage().Height);
-                        Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
-                        if (recA.Contains(recB))
-                        {
-                            state = GameState.joinOptions;
-                        }
-                    }
-                    if (joinIneternet.isVisible())
-                    {
-                        Rectangle recA = new Rectangle((int)joinIneternet.getPos().X, (int)joinIneternet.getPos().Y, joinIneternet.getImage().Width, joinIneternet.getImage().Height);
-                        Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
-                        if (recA.Contains(recB))
-                        {
-                            state = GameState.enterIp;
-                        }
-                    }
-                    if (joinLan.isVisible())
-                    {
-                        Rectangle recA = new Rectangle((int)joinLan.getPos().X, (int)joinLan.getPos().Y, joinLan.getImage().Width, joinLan.getImage().Height);
-                        Rectangle recB = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
-                        if (recA.Contains(recB))
-                        {
-                            client.DiscoverLocalPeers(14242);
-                            state = GameState.playing;
-                            LAN = true;
-                        }
-                    }
+                      
                 }
-                }else{
+                else
+                {
                     KeyboardState keyState = Keyboard.GetState();
 
                 // exit game if escape or Back is pressed
@@ -356,55 +500,45 @@ namespace XNAClient
                     }
                 }
 
-                foreach (var p in allPlayers)
-                {
-                    int cookieId = 0;
+                
+                
                     
 
-                    for (int x = 0; x < cookies.Count; x++)
+                for (int x = 0; x < cookies.Count; x++)
+                {
+
+                    Rectangle recA = new Rectangle((int)player.getPos().X, (int)player.getPos().Y, 114, 240);
+                    Rectangle recB = new Rectangle((int)cookies[x].getPos().X, (int)cookies[x].getPos().Y, 60, 60);
+
+                    if (recA.Intersects(recB))
                     {
 
-                        Rectangle recA = new Rectangle((int)player.getPos().X, (int)player.getPos().Y, 114, 240);
-                        Rectangle recB = new Rectangle((int)cookies[x].getPos().X, (int)cookies[x].getPos().Y, 60, 60);
+                        NetOutgoingMessage om = client.CreateMessage();
+                        om.Write(player.getId());
+                        om.Write(cookies[x].getId());
+                        client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced, 1);
 
-                        if (recA.Intersects(recB))
-                        {
-                            cookieId = cookies[x].getId();
-                            cookies.RemoveAt(x);
-                            Draw(gameTime);
-                            //We just removed an object, so we set x back by one to make sure we skip none
-                            //Just sit down and think about it, it makes sense
-                            x--;
-
-                            if (p.getId() == player.getId())
-                            {
-                                if (cookieId > 0)
-                                {
-                                    // do some simple processing for 10 seconds
-                                    NetOutgoingMessage om = client.CreateMessage();
-                                    om.Write(player.getId());
-                                    om.Write(cookieId);
-                                    client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced, 1);
-
-                                    //bg.DoWork += new DoWorkEventHandler(
-                                    //delegate(object o, DoWorkEventArgs args)
-                                    //{
-                                    //    BackgroundWorker b = o as BackgroundWorker;
+                        cookies.RemoveAt(x);
+                        
+                        //We just removed an object, so we set x back by one to make sure we skip none
+                        //Just sit down and think about it, it makes sense
+                        x--;
 
 
+                    
+                    
+                        
+                        
 
-                                    //});
-                                    //bg.RunWorkerAsync();
-                                    cookieId = 0;
-                                }
+                    
 
-                            }
+                        
                             
-                        }
+                    }
                         
 
 
-                    }
+                    
                     
 
 
@@ -420,6 +554,7 @@ namespace XNAClient
                     // If there's input; send it to server
                     //
                     NetOutgoingMessage om = client.CreateMessage();
+                    om.Write(player.getId());
                     om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
                     om.Write(yinput);
                     client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced, 0);
@@ -465,15 +600,15 @@ namespace XNAClient
                     bool cookieFound = false;
                     switch (msg.MessageType)
                     {
-                        case NetIncomingMessageType.DiscoveryResponse:
-                            // just connect to first server discovered
-                            Console.WriteLine("Received a request response");
-                            if (LAN)
-                            {
-                                client.Connect(msg.SenderEndPoint);
-                            }
+                        //case NetIncomingMessageType.DiscoveryResponse:
+                        //    // just connect to first server discovered
+                        //    Console.WriteLine("Received a request response");
+                        //    if (LAN)
+                        //    {
+                        //        client.Connect(msg.SenderEndPoint);
+                        //    }
                             
-                            break;
+                        //    break;
                         case NetIncomingMessageType.Data:
 
                             if (msg.SequenceChannel == 0)
@@ -482,76 +617,65 @@ namespace XNAClient
                                 long who = msg.ReadInt64();
                                 float x = msg.ReadFloat();
                                 float y = msg.ReadFloat();
+                                int playerNum = msg.ReadInt32();
 
 
-                                Player newPlayer = null;
+                                
                                 foreach (var p in allPlayers)
                                 {
 
 
 
-                                    if (who == player.getId())
+                                    if (who == p.getId())
                                     {
-                                        if (firstPass == true && x > 0)
+                                        if (p.getId() != player.getId())
                                         {
-                                            player.newPos(new Vector2(x, y));
-                                            firstPass = false;
+                                            float xDiff = Math.Abs(x - p.getPos().X);
+                                            float yDiff = Math.Abs(y - p.getPos().Y);
+
+                                            
+
+                                            if (xDiff <= 5)
+                                            {
+                                                p.setMoveX(0);
+                                            }
+                                            else if (x > p.getPos().X)
+                                            {
+                                                p.setMoveX(1);
+                                            }
+                                            else if (x < p.getPos().X)
+                                            {
+                                                p.setMoveX(-1);
+                                            }
+
+
+
+
+
+                                            if (y == p.getPos().Y)
+                                            {
+                                                p.setMoveY(0);
+                                            }
+                                            else if (y > p.getPos().Y)
+                                            {
+                                                p.setMoveY(1);
+                                            }
+                                            else
+                                            {
+                                                p.setMoveY(-1);
+                                            }
+
                                         }
-                                        playerFound = true;
                                     }
-                                    else if (who == p.getId() && p.getId() != player.getId())
-                                    {
-                                        float xDiff = Math.Abs(x - p.getPos().X);
-                                        float yDiff = Math.Abs(y - p.getPos().Y);
-
-                                        playerFound = true;
-
-                                        if (xDiff <= 5)
-                                        {
-                                            p.setMoveX(0);
-                                        }
-                                        else if (x > p.getPos().X)
-                                        {
-                                            p.setMoveX(1);
-                                        }
-                                        else if (x < p.getPos().X)
-                                        {
-                                            p.setMoveX(-1);
-                                        }
-
-
-
-
-
-                                        if (y == p.getPos().Y)
-                                        {
-                                            p.setMoveY(0);
-                                        }
-                                        else if (y > p.getPos().Y)
-                                        {
-                                            p.setMoveY(1);
-                                        }
-                                        else
-                                        {
-                                            p.setMoveY(-1);
-                                        }
-
-                                        //p.newPos(new Vector2(xToUse, yToUse));
-                                        //p.updatePosX(xToUse);
-                                        //p.updatePosY(yToUse);
-                                    }
+                                    
 
                                 }
-                                if (playerFound == false)
-                                {
-                                    newPlayer = new Player(truettFall, x, y, who);
-                                    allPlayers.Add(newPlayer);
-                                }
+                                
 
                                 positions[who] = new Vector2(x, y);
 
                             }
-                            else if (msg.SequenceChannel == 1)
+                            if (msg.SequenceChannel == 1)
                             {
 
                                 //cookies.Clear();
@@ -670,11 +794,28 @@ namespace XNAClient
                     {
                         remoteIp = textbox.getText();
                         client.Connect(remoteIp, 14242);
-                        state = GameState.playing;
+                        state = GameState.lobby;
 
                     }
                     
 
+                    break;
+
+                case GameState.lobby:
+
+
+                    int stringY = 0;
+                    foreach (var players in allPlayers)
+                    {
+                        stringY += 100;
+                        spriteBatch.DrawString(Content.Load<SpriteFont>("Text"), "Player " + players.getPlayerNum(), new Vector2(30, stringY), Color.White);
+                    }
+
+                    if (allPlayers.Count > 1 && host == true)
+                    {
+                        startGame.makeVisible();
+                        spriteBatch.Draw(startGame.getImage(), startGame.getPos(), Color.White);
+                    }
                     break;
 
                 case GameState.playing:
@@ -713,6 +854,8 @@ namespace XNAClient
                     }
 
                     break;
+
+                
 
             }
 
