@@ -41,6 +41,8 @@ namespace XNAClient
         private Texture2D internet_button;
         private Texture2D lan_button;
         private Texture2D start_button;
+        private Texture2D truett_yellow;
+        private Texture2D truett_green;
 
         CollisionDetection collision = new CollisionDetection();
 
@@ -100,6 +102,7 @@ namespace XNAClient
         int remoteLevel;
 
         int numPlayers;
+        int playerImage = 1;
         
 
 
@@ -146,7 +149,7 @@ namespace XNAClient
             tobyStanding = Content.Load<Texture2D>("toby_stand");
             trampolineImage1 = Content.Load<Texture2D>("trampoline");
             trampolineImage2 = Content.Load<Texture2D>("trampoline_pressed");
-            truettFall = Content.Load<Texture2D>("truett");
+            truettFall = Content.Load<Texture2D>("Truett");
             truettJump = Content.Load<Texture2D>("truett_jump");
             background = Content.Load<Texture2D>("park");
             single_player_button = Content.Load<Texture2D>("single_player");
@@ -156,7 +159,8 @@ namespace XNAClient
             internet_button = Content.Load<Texture2D>("internet");
             lan_button = Content.Load<Texture2D>("lan");
             start_button = Content.Load<Texture2D>("startGame");
-
+            truett_yellow = Content.Load<Texture2D>("Truett2");
+            truett_green = Content.Load<Texture2D>("Truett3");
 
 
             textbox = new TextBox(GraphicsDevice, 400, Content.Load<SpriteFont>("Text"))
@@ -187,7 +191,7 @@ namespace XNAClient
             joinIneternet = new Button(internet_button, 100, 200);
             hostLan = new Button(lan_button, 100, 100);
             hostInternet = new Button(internet_button, 100, 200);
-            startGame = new Button(start_button, 300, 100);
+            startGame = new Button(start_button, 400, 100);
 
 
 
@@ -229,11 +233,11 @@ namespace XNAClient
                                 server = new Server();
                                 sfd = new SomeFunctionDelegate(server.launchServer);
                                 sfd.BeginInvoke(null, null);
-                                //host++;
+                                host = true;
                                 LAN = true;
                                 client.DiscoverLocalPeers(14242);
                             
-                                state = GameState.playing;
+                                state = GameState.lobby;
 
 
                             }
@@ -348,13 +352,29 @@ namespace XNAClient
                                         float x = msg.ReadFloat();
                                         float y = msg.ReadFloat();
                                         int playerNum = msg.ReadInt32();
+                                        Texture2D image;
 
+
+                                        if (playerNum == 2)
+                                        {
+                                            image = truett_yellow;
+                                        }
+                                        else if (playerNum == 3)
+                                        {
+                                            image = truett_green;
+                                        }
+                                        else
+                                        {
+                                            image = truettFall;
+                                        }
 
                                         Player newPlayer = null;
                                         foreach (var p in allPlayers)
-                                        {                                 
+                                        {
 
+                                            
 
+                    
 
                                             if (who == p.getId())
                                             {
@@ -370,8 +390,8 @@ namespace XNAClient
 
                                                     if (player.getPlayerNum() != playerNum)
                                                     {
-
-                                                        player.setPlayerNum(playerNum);
+                                                        player.setPlayerNum(playerNum, image);
+                                                        
                                                     }
 
 
@@ -386,7 +406,9 @@ namespace XNAClient
                                         }
                                         if (playerFound == false)
                                         {
-                                            newPlayer = new Player(truettFall, x, y, who, numPlayers);
+                                            
+                                            
+                                            newPlayer = new Player(image, x, y, who, numPlayers);
                                             allPlayers.Add(newPlayer);
                                             numPlayers++;
                                         }
@@ -503,46 +525,44 @@ namespace XNAClient
                 
                 
                     
-
-                for (int x = 0; x < cookies.Count; x++)
+                foreach(var pl in allPlayers)
                 {
-
-                    Rectangle recA = new Rectangle((int)player.getPos().X, (int)player.getPos().Y, 114, 240);
-                    Rectangle recB = new Rectangle((int)cookies[x].getPos().X, (int)cookies[x].getPos().Y, 60, 60);
-
-                    if (recA.Intersects(recB))
+                    for (int x = 0; x < cookies.Count; x++)
                     {
 
-                        NetOutgoingMessage om = client.CreateMessage();
-                        om.Write(player.getId());
-                        om.Write(cookies[x].getId());
-                        client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced, 1);
+                        Rectangle recA = new Rectangle((int)player.getPos().X, (int)player.getPos().Y, 114, 240);
+                        Rectangle recB = new Rectangle((int)cookies[x].getPos().X, (int)cookies[x].getPos().Y, 60, 60);
+                        Rectangle recC = new Rectangle((int)pl.getPos().X, (int)pl.getPos().Y, 114, 240);
 
-                        cookies.RemoveAt(x);
-                        
-                        //We just removed an object, so we set x back by one to make sure we skip none
-                        //Just sit down and think about it, it makes sense
-                        x--;
-
-
-                    
-                    
-                        
-                        
-
-                    
-
-                        
+                        if (recA.Intersects(recB) || recC.Intersects(recB))
+                        {
+                            if(recA.Intersects(recB))
+                            {
+                                NetOutgoingMessage om = client.CreateMessage();
+                                om.Write(player.getId());
+                                om.Write(cookies[x].getId());
+                                client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced, 1);
+                            }
                             
+
+                            cookies.RemoveAt(x);
+
+                            //We just removed an object, so we set x back by one to make sure we skip none
+                            //Just sit down and think about it, it makes sense
+                            x--;
+
+                        }
+
+
+
+
+
+
+
                     }
-                        
-
-
-                    
-                    
-
 
                 }
+                
                 if (xinput != 0 || yinput != 0)
                 {
 
@@ -600,15 +620,15 @@ namespace XNAClient
                     bool cookieFound = false;
                     switch (msg.MessageType)
                     {
-                        //case NetIncomingMessageType.DiscoveryResponse:
-                        //    // just connect to first server discovered
-                        //    Console.WriteLine("Received a request response");
-                        //    if (LAN)
-                        //    {
-                        //        client.Connect(msg.SenderEndPoint);
-                        //    }
-                            
-                        //    break;
+                        case NetIncomingMessageType.DiscoveryResponse:
+                            // just connect to first server discovered
+                            Console.WriteLine("Received a request response");
+                            if (gameType == "single")
+                            {
+                                client.Connect(msg.SenderEndPoint);
+                            }
+
+                            break;
                         case NetIncomingMessageType.Data:
 
                             if (msg.SequenceChannel == 0)
@@ -803,15 +823,23 @@ namespace XNAClient
 
                 case GameState.lobby:
 
-
-                    int stringY = 0;
+                    joinIneternet.makeInvisible();
+                    joinLan.makeInvisible();
+                    int stringY = 100;
                     foreach (var players in allPlayers)
                     {
-                        stringY += 100;
+                        
                         spriteBatch.DrawString(Content.Load<SpriteFont>("Text"), "Player " + players.getPlayerNum(), new Vector2(30, stringY), Color.White);
+                        spriteBatch.Draw(players.getImage(), new Vector2(300, stringY - 100), Color.White);
+                        stringY += 200;
                     }
 
                     if (allPlayers.Count > 1 && host == true)
+                    {
+                        startGame.makeVisible();
+                        spriteBatch.Draw(startGame.getImage(), startGame.getPos(), Color.White);
+                    }
+                    else if (gameType == "single")
                     {
                         startGame.makeVisible();
                         spriteBatch.Draw(startGame.getImage(), startGame.getPos(), Color.White);

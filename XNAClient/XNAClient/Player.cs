@@ -196,9 +196,10 @@ namespace XNAClient
             return playerNum;
         }
 
-        public void setPlayerNum(int inNum)
+        public void setPlayerNum(int inNum, Texture2D inImage)
         {
             playerNum = inNum;
+            image = inImage;
         }
 
         public float getPosX()
